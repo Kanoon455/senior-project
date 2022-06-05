@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import React, { 
+  //useEffect, 
+  useState } from "react";
 import { Col, Row, Form, Button } from "react-bootstrap";
 import firebaseApp from "../database/firebase";
+//import firebase from "..database/firebase";
+//import { collection, getDocs } from "firebase/firestore";
 
 const App = props => {
 
   const db = firebaseApp.firestore()
   const userCollection = db.collection('users')
 
-  // const insert = props => {
-    const [nameSenser, setNameSenser] = useState('');
-    const [typeSenser, setTypeSenser] = useState('');
-    const [dateSenser, setDateSenser] = useState('');
-    const [latitudeSenser, setLatitudeSenser] = useState('');
-    const [longtitudeSenser, setLongtitudeSenser] = useState('');
-//  }
+  // const [userData, setUserData] = useState([]);
 
-
+  const [nameSenser, setNameSenser] = useState('');
+  const [typeSenser, setTypeSenser] = useState('');
+  const [dateSenser, setDateSenser] = useState('');
+  const [latitudeSenser, setLatitudeSenser] = useState('');
+  const [longtitudeSenser, setLongtitudeSenser] = useState('');
 
   async function insertDocument() {
     const documentRef = await userCollection.add({
@@ -28,9 +30,33 @@ const App = props => {
     alert(`new document has been inserted as ${documentRef.id}`)
   }
 
-  // const delateData
-  // const addData
-  // const updateData
+  // useEffect(() => {
+  //   const firestore = userCollection;
+  //   firestore.on("value", (Response) => {
+  //     const data = Response.val();
+  //     let userInfo = [];
+  //     for(let id in data){
+  //       userInfo({
+  //         id :id,
+  //         nameSenser: data[id].nameSenser,
+  //         typeSenser: data[id].typeSenser,
+  //         dateSenser: data[id].dateSenser,
+  //         latitudeSenser: data[id].latitudeSenser,
+  //         longtitudeSenser: data[id].longtitudeSenser,
+  //       });
+  //     }
+  //     setUserData(userInfo)
+  //   });
+  // })
+
+  userCollection.onSnapshot((querySnapshot) => {
+    var user = [];
+    querySnapshot.forEach(doc => {
+      user.push(doc.data());
+    });
+    console.log(querySnapshot);
+    console.log(user);
+  });
 
   return (
     <div className="dashboard">
@@ -49,7 +75,7 @@ const App = props => {
               <Form.Control
                 placeholder="Name of Senser"
                 value={nameSenser}
-                onChange={e =>  setNameSenser(e.target.value)} />
+                onChange={e => setNameSenser(e.target.value)} />
               <br />
               <Form.Control
                 placeholder="Type of Senser"
@@ -90,6 +116,7 @@ const App = props => {
               <th scope="col">Date</th>
             </tr>
           </thead>
+         
           <tbody>
             <tr>
               <td>LP-255</td>
