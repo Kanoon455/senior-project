@@ -6,6 +6,7 @@ export default function SignIn() {
   useEffect(() => {
     const authUnsubscribe = auth.onAuthStateChanged((user) => {
       setuser(user);
+      console.log("User email: ", user.email);
     });
     return () => {
       authUnsubscribe();
