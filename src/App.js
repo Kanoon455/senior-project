@@ -1,12 +1,17 @@
 import "./App.css";
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Navbar, Nav, Container } from "react-bootstrap";
 import Home from "./pages/home";
 import Dashboard from "./pages/dashboard";
 import Blank from "./pages/blank";
 import SignIn from "./components/signIn";
 
+import { BrowserRouter as Router, 
+  Routes, 
+  Route } from "react-router-dom";
+
+import { Navbar, 
+  Nav, 
+  Container } from "react-bootstrap";
 
 function App() {
   return (
@@ -36,6 +41,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
-//  <Nav.Link href="#deets">Register</Nav.Link>

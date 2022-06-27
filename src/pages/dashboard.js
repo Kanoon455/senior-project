@@ -2,19 +2,21 @@ import React, {
   useEffect,
   useState
 } from "react";
-import { Col, Row, Form, Button, Table, Container, Modal, FormGroup, Stack } from "react-bootstrap";
+import { Col, Row, Form, Button, Table, Container, Modal } from "react-bootstrap";
 import firebase from "../database/firebase";
-import { doc, onSnapshot } from "firebase/firestore"
+
+import deleteFunc from "../crud/deleteFunc"
 
 const App = props => {
-
-  ///////////////////////////////////// imprement state /////////////////////////////////
 
   const [nameSenser, setNameSenser] = useState('');
   const [typeSenser, setTypeSenser] = useState('');
   const [dateSenser, setDateSenser] = useState('');
   const [latitudeSenser, setLatitudeSenser] = useState('');
   const [longtitudeSenser, setLongtitudeSenser] = useState('');
+
+
+  ///////////////////////////////////// imprement state /////////////////////////////////
 
   const [updateName, setUpdateName] = useState('');
   const [updateType, setUpdateType] = useState('');
@@ -33,7 +35,7 @@ const App = props => {
   //////////////////////////////////// add data state /////////////////////////////////
 
   async function insertDocument() {
-    
+
     const documentRef = await db.collection("sensor").add({
       nameSenser,
       typeSenser,
@@ -78,21 +80,22 @@ const App = props => {
   async function updateDocument(id) {
     console.log(id)
     const documentRef = await db.collection("sensor").doc(id).update({
-      updateName,
-      updateType,
-      updateDate,
-      updateLati,
-      updateLong
+      nameSenser: updateName,
+      typeSenser: updateType,
+      dateSenser: updateDate,
+      latitudeSenser: updateLati,
+      longtitudeSenser: updateLong
     });
-    console.log(documentRef);
+    console.log("updata success.");
   }
 
   /////////////////////////////////////// delete process ///////////////////////////
+
   async function deleteDocument(id) {
     db.collection("sensor").doc(id).delete();
-    console.log("deleted " + id)
+    alert("deleted " + id)
   }
-
+  ////////////////////////////// Display /////////////////////////////////////
   return (
     <div className="dashboard">
       <div className="container fluid=md">
@@ -121,7 +124,6 @@ const App = props => {
                 value={dateSenser}
                 onChange={e => setDateSenser(e.target.value)} />
             </Col>
-
             <Col>
               <Form.Control
                 placeholder="Latitude"
@@ -152,8 +154,8 @@ const App = props => {
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody>
 
+              <tbody>
                 {post.length > 0 ? (
                   post.map((post) =>
                     <tr key={post.key}>
@@ -165,86 +167,84 @@ const App = props => {
                       <td>
                         <Button variant="outline-primary" onClick={handleShow} size="sm">
                           edit
-                        </Button>
-                        {' '}
+                        </Button>{' '}
                         <Modal show={show} onHide={handleClose}>
                           <Modal.Header closeButton>
                             <Modal.Title>Enter in text</Modal.Title>
                           </Modal.Header>
                           <Modal.Body>
                             <Form>
-                              <Form.Group className="mb-3"
-                                value={post.updateName}
-                                onChange={e => setUpdateName(e.target.value)}>
+                              <Form.Group className="mb-3">
                                 <Form.Label>Name sensor</Form.Label>
                                 <Form.Control
                                   type="text"
                                   placeholder="NP-234"
-                                />
+                                  value={updateName}
+                                  onChange={e => setUpdateName(e.target.value)} />
+
                               </Form.Group>
-                              <Form.Group className="mb-3"
-                                value={post.updateType}
-                                onChange={e => setUpdateType(e.target.value)}>
+                              <Form.Group className="mb-3">
                                 <Form.Label>Type sensor</Form.Label>
                                 <Form.Control
                                   type="text"
                                   placeholder="CO2"
-
+                                  value={updateType}
+                                  onChange={e => setUpdateType(e.target.value)}
                                 />
                               </Form.Group>
-                              <Form.Group className="mb-3"
-                                value={post.updateDate}
-                                onChange={e => setUpdateDate(e.target.value)}>
+                              <Form.Group className="mb-3">
                                 <Form.Label>Date update</Form.Label>
                                 <Form.Control
                                   type="text"
                                   placeholder="22-4-2022"
-
+                                  value={updateDate}
+                                  onChange={e => setUpdateDate(e.target.value)}
                                 />
                               </Form.Group>
-                              <Form.Group className="mb-3"
-                                value={post.updateLati}
-                                onChange={e => setUpdateLati(e.target.value)}>
+                              <Form.Group className="mb-3">
                                 <Form.Label>Latitude</Form.Label>
                                 <Form.Control
                                   type="text"
                                   placeholder="16.234"
+                                  value={updateLati}
+                                  onChange={e => setUpdateLati(e.target.value)}
                                 />
                               </Form.Group>
-                              <Form.Group className="mb-3"
-                                value={post.updateLong}
-                                onChange={e => setUpdateLong(e.target.value)} />
+                              <Form.Group className="mb-3" />
                               <Form.Label>Longtitude</Form.Label>
                               <Form.Control
                                 type="text"
                                 placeholder="13.4564"
-                                />
-                          </Form>
-                        </Modal.Body>
-                        <Modal.Footer>
-                          <Button variant="secondary" onClick={handleClose}>
-                            Close
-                          </Button>
-                          <Button variant="primary" onClick={updateDocument(post.key)}>
-                            Save Changes
-                          </Button>
-                        </Modal.Footer>
-                      </Modal>
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        onClick={() => deleteDocument(post.key)} >
-                        Delete
-                      </Button>
-
-                    </td>
+                                value={updateLong}
+                                onChange={e => setUpdateLong(e.target.value)}
+                              />
+                            </Form>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button variant="secondary" onClick={handleClose}>
+                              Close
+                            </Button>
+                            <Button
+                              variant="primary"
+                              onClick={() => updateDocument(post.key)}>
+                              Save Changes
+                            </Button>
+                          </Modal.Footer>
+                        </Modal>
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => deleteDocument(post.key)} >
+                          Delete
+                        </Button>
+                      </td>
                     </tr>)
-              ) : <h1>no post.</h1>}
-            </tbody>
-          </Table>
-        </Row>
-      </Container>
-    </div>
+                ) : <h3>no post.</h3>}
+              </tbody>
+            </Table>
+          </Row>
+        </Container>
+      </div>
     </div >
   );
 }
