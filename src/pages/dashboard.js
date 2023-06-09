@@ -5,7 +5,7 @@ import React, {
 import { Col, Row, Form, Button, Table, Container, Modal } from "react-bootstrap";
 import firebase from "../database/firebase";
 
-import deleteFunc from "../crud/deleteFunc"
+//import deleteFunc from "../crud/deleteFunc"
 
 const App = props => {
 
